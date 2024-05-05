@@ -6,37 +6,58 @@ import {
   publicProcedure,
 } from "@/server/api/trpc";
 
+const MAX_PER_PAGE = 10;
+
 export const postRouter = createTRPCRouter({
-  hello: publicProcedure
-    .input(z.object({ text: z.string() }))
-    .query(({ input }) => {
+  get_posts: publicProcedure
+    .input(z.number().positive().default(1))
+    .query(async ({ ctx, input }) => {
+
+      const [posts, count] = await ctx.db.$transaction([
+        ctx.db.post.findMany({
+          orderBy: { createdAt: "desc" },
+          take: MAX_PER_PAGE,
+          skip: (input - 1) * MAX_PER_PAGE,
+          include: { createdBy: true }
+        }),
+        ctx.db.post.count(),
+      ])
+
       return {
-        greeting: `Hello ${input.text}`,
-      };
+        posts,
+        page: input,
+        total_pages: Math.ceil(count / MAX_PER_PAGE),
+        total_in_this_page: posts.length
+      }
     }),
 
-  create: protectedProcedure
-    .input(z.object({ name: z.string().min(1) }))
+  create_post: protectedProcedure
+    .input(z.object({ content: z.string() }))
     .mutation(async ({ ctx, input }) => {
-      // simulate a slow db call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      return ctx.db.post.create({
-        data: {
-          name: input.name,
-          createdBy: { connect: { id: ctx.session.user.id } },
-        },
-      });
+      if (input.content.length < 1) {
+        throw new Error("Post should contain some content.")
+      } else {
+        const post = await ctx.db.post.create({
+          data: {
+            content: input.content,
+            createdBy: { connect: { id: ctx.session.user.id } }
+          }
+        })
+        return post
+      }
     }),
 
-  getLatest: protectedProcedure.query(({ ctx }) => {
-    return ctx.db.post.findFirst({
-      orderBy: { createdAt: "desc" },
-      where: { createdBy: { id: ctx.session.user.id } },
-    });
-  }),
-
-  getSecretMessage: protectedProcedure.query(() => {
-    return "you can now see this secret message!";
-  }),
+  get_post: publicProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const post = await ctx.db.post.findUnique({
+        where: { id: input },
+        include: { createdBy: true }
+      })
+      if (!post) {
+        throw new Error("Post not found.")
+      } else {
+        return post
+      }
+    })
 });
