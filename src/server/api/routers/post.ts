@@ -5,8 +5,7 @@ import {
   protectedProcedure,
   publicProcedure,
 } from "@/server/api/trpc";
-
-const MAX_PER_PAGE = 10;
+const MAX_PER_PAGE = 2;
 
 export const postRouter = createTRPCRouter({
   get_posts: publicProcedure

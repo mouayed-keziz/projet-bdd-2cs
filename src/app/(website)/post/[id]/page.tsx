@@ -8,6 +8,7 @@ import {
 import { Button, buttonVariants } from "@/components/ui/button";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import CommentsSection from "@/components/home/comments/comments-section";
 
 export default async function Page({ params }: { params: { id: string } }) {
     const post = await api.post.get_post(params.id)
@@ -34,6 +35,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     <p>{post.content}</p>
                 </div>
             </Card>
+            <CommentsSection postId={params.id} />
         </>
     );
 }

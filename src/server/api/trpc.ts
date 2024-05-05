@@ -13,7 +13,7 @@ import { ZodError } from "zod";
 
 import { getServerAuthSession } from "@/server/auth";
 import { db } from "@/server/db";
-
+import { db as mongoDB } from "@/server/mongo"
 /**
  * 1. CONTEXT
  *
@@ -31,6 +31,7 @@ export const createTRPCContext = async (opts: { headers: Headers }) => {
 
   return {
     db,
+    Comment: mongoDB.Comment,
     session,
     ...opts,
   };

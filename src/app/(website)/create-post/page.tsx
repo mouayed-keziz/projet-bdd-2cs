@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { api } from "@/trpc/react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner"
@@ -34,7 +35,10 @@ export default function Page() {
                     <div className="grid w-full gap-2">
                         <Textarea disabled={isPending} value={content} onChange={(e) => setContent(e.target.value)} placeholder="Type your message here." />
                         <div className="h-1" />
-                        <Button onClick={() => submit_handeler()}>Post</Button>
+                        <Button disabled={isPending} className="gap-2" onClick={() => submit_handeler()}>
+                            Post
+                            {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                        </Button>
                     </div>
                 </div>
             </div>

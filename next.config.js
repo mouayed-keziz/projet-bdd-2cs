@@ -9,14 +9,16 @@ await import("./src/env.js");
 /** @type {import("next").NextConfig} */
 const config = {
     experimental: {
-        typedRoutes: true
+        typedRoutes: true,
+        esmExternals: "loose", // <-- add this
+        serverComponentsExternalPackages: ["mongoose"] // <-- and this
     },
     typescript: {
         ignoreBuildErrors: true,
     },
     eslint: {
         ignoreDuringBuilds: true,
-    }
+    },
 };
 
 export default config;

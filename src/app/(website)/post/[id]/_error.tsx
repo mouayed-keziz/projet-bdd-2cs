@@ -10,9 +10,9 @@ export default function ErrorPage({
     return (
 
         <>
-            <h1 className="font-bold text-5xl text-center">
+            <code className="font-bold text-xl text-center">
                 {error.message}
-            </h1>
+            </code>
         </>
     );
 }
