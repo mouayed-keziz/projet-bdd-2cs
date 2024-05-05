@@ -1,7 +1,7 @@
 import PostLoading from "./post-loading";
 
 
-const LOADING_ELEMENTS = 12
+const LOADING_ELEMENTS = 4
 
 
 export default function PostsLoading() {
