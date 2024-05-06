@@ -22,7 +22,7 @@ interface PostWithUser extends Post {
 
 export default function PostCard({ post }: { post: PostWithUser }) {
     return (
-        <Card className="aspect-video">
+        <Card className="flex flex-col justify-between items-start">
             <CardHeader className="pb-3">
                 <div className="flex justify-start items-center gap-2">
                     <Avatar>
