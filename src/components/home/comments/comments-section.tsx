@@ -9,6 +9,7 @@ export default async function CommentsSection({ postId }: { postId: string }) {
             <AddCommentSection postId={postId} />
             <div className="h-6" />
             {(comments.length > 0) && <Comments comments={comments} />}
+            <div className="h-12" />
         </>
     );
 }
